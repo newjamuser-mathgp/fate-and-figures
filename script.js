@@ -1,3 +1,4 @@
+// Questions Data
 const questions = [
   {
     level: 1,
@@ -46,10 +47,15 @@ const questions = [
   }
 ];
 
-let current = 0, startTime, timerInterval;
+// Game Variables
+let current = 0;
+let startTime;
+let timerInterval;
 
+// Show Question
 function showQuestion() {
   const q = questions[current];
+
   document.getElementById('screen').innerHTML = `
     <h2>Level ${q.level}: ${q.title}</h2>
     <p>${q.question}</p>
@@ -62,11 +68,14 @@ function showQuestion() {
   `;
 }
 
+// Check Answer
 function checkAnswer(selected) {
   const q = questions[current];
   const feedback = document.getElementById('feedback');
+
   if (selected === q.answer) {
-    feedback.innerHTML = `<span style="color:green;">Correct! ${q.explanation}</span>`;
+    feedback.innerHTML = `<span style="color:lightgreen;">Correct! ${q.explanation}</span>`;
+
     setTimeout(() => {
       current++;
       if (current < questions.length) {
@@ -75,35 +84,45 @@ function checkAnswer(selected) {
         endGame();
       }
     }, 1500);
+
   } else {
     feedback.innerHTML = `<span style="color:red;">Try Again!</span>`;
   }
 }
 
+// Start Game
 function startGame() {
   current = 0;
   showQuestion();
+
   startTime = Date.now();
   timerInterval = setInterval(updateTimer, 100);
+
   document.getElementById('start-btn').style.display = 'none';
 }
 
+// Update Timer
 function updateTimer() {
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
   document.getElementById('timer').textContent = `Time: ${elapsed}s`;
 }
 
+// End Game
 function endGame() {
   clearInterval(timerInterval);
+
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+
   document.getElementById('screen').innerHTML = `
-    <h2>Congratulations!</h2>
+    <h2>🎉 Congratulations!</h2>
     <p>You completed all levels in ${elapsed} seconds!</p>
     <button onclick="startGame()">Play Again</button>
   `;
+
   document.getElementById('start-btn').style.display = 'block';
 }
 
-document.getElementById('start-btn').onclick = startGame;
- ⁠
-
+// ✅ FIX: Ensure button works after page loads
+window.onload = function() {
+  document.getElementById('start-btn').onclick = startGame;
+};
